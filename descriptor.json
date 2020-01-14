@@ -1,5 +1,5 @@
 {
-  "name": "cyto_soft-1",
+  "name": "soft-1",
   "description": "Detect samples in images using an adaptive threshold.",
   "container-image": {
     "image": "giussepi/cyto_soft-1",
