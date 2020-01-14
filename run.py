@@ -69,6 +69,7 @@ def find_components(image):
 
 
 def main(argv):
+
     with CytomineJob.from_cli(argv) as cj:
 
         images = ImageInstanceCollection().fetch_with_filter("project", cj.parameters.cytomine_id_project)
@@ -83,51 +84,51 @@ def main(argv):
 
             bit_depth = image.bitDepth if image.bitDepth is not None else 8
 
-            image.dump(dest_pattern="/tmp/{id}.jpg", max_size=max(resized_width, resized_height), bits=bit_depth)
-            img = cv2.imread(image.filename, cv2.IMREAD_GRAYSCALE)
+            # image.dump(dest_pattern="/tmp/{id}.jpg", max_size=max(resized_width, resized_height), bits=bit_depth)
+            # img = cv2.imread(image.filename, cv2.IMREAD_GRAYSCALE)
 
-            thresholded_img = cv2.adaptiveThreshold(img, 2**bit_depth, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                                    cv2.THRESH_BINARY, cj.parameters.threshold_blocksize,
-                                                    cj.parameters.threshold_constant)
+            # thresholded_img = cv2.adaptiveThreshold(img, 2**bit_depth, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            #                                         cv2.THRESH_BINARY, cj.parameters.threshold_blocksize,
+            #                                         cj.parameters.threshold_constant)
 
-            kernel = np.ones((5, 5), np.uint8)
-            eroded_img = cv2.erode(thresholded_img, kernel, iterations=cj.parameters.erode_iterations)
-            dilated_img = cv2.dilate(eroded_img, kernel, iterations=cj.parameters.dilate_iterations)
+            # kernel = np.ones((5, 5), np.uint8)
+            # eroded_img = cv2.erode(thresholded_img, kernel, iterations=cj.parameters.erode_iterations)
+            # dilated_img = cv2.dilate(eroded_img, kernel, iterations=cj.parameters.dilate_iterations)
 
-            extension = 10
-            extended_img = cv2.copyMakeBorder(dilated_img, extension, extension, extension, extension,
-                                              cv2.BORDER_CONSTANT, value=2**bit_depth)
+            # extension = 10
+            # extended_img = cv2.copyMakeBorder(dilated_img, extension, extension, extension, extension,
+            #                                   cv2.BORDER_CONSTANT, value=2**bit_depth)
 
-            components = find_components(extended_img)
-            zoom_factor = image.width / float(resized_width)
-            for i, component in enumerate(components):
-                converted = []
-                for point in component[0]:
-                    x = int((point[0] - extension) * zoom_factor)
-                    y = int(image.height - ((point[1] - extension) * zoom_factor))
-                    converted.append((x, y))
+            # components = find_components(extended_img)
+            # zoom_factor = image.width / float(resized_width)
+            # for i, component in enumerate(components):
+            #     converted = []
+            #     for point in component[0]:
+            #         x = int((point[0] - extension) * zoom_factor)
+            #         y = int(image.height - ((point[1] - extension) * zoom_factor))
+            #         converted.append((x, y))
 
-                components[i] = Polygon(converted)
+            #     components[i] = Polygon(converted)
 
-            # Find largest component (whole image)
-            largest = max(components, key=attrgetter('area'))
-            components.remove(largest)
+            # # Find largest component (whole image)
+            # largest = max(components, key=attrgetter('area'))
+            # components.remove(largest)
 
-            # Only keep components greater than 5% of whole image
-            min_area = int(0.05 * image.width * image.height)
+            # # Only keep components greater than 5% of whole image
+            # min_area = int(0.05 * image.width * image.height)
 
-            annotations = AnnotationCollection()
-            for component in components:
-                if component.area > min_area:
-                    annotations.append(Annotation(location=component.wkt, id_image=image.id,
-                                                  id_terms=[cj.parameters.cytomine_id_predicted_term],
-                                                  id_project=cj.parameters.cytomine_id_project))
+            # annotations = AnnotationCollection()
+            # for component in components:
+            #     if component.area > min_area:
+            #         annotations.append(Annotation(location=component.wkt, id_image=image.id,
+            #                                       id_terms=[cj.parameters.cytomine_id_predicted_term],
+            #                                       id_project=cj.parameters.cytomine_id_project))
 
-                    if len(annotations) % 100 == 0:
-                        annotations.save()
-                        annotations = AnnotationCollection()
+            #         if len(annotations) % 100 == 0:
+            #             annotations.save()
+            #             annotations = AnnotationCollection()
 
-            annotations.save()
+            # annotations.save()
 
         cj.job.update(statusComment="Finished.")
 
