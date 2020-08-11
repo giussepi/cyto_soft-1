@@ -6,9 +6,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import subprocess
 import sys
-import logging
 from argparse import ArgumentParser
 
 from cytomine import CytomineJob
