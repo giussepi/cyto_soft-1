@@ -1,16 +1,5 @@
-# Cytomine software - Segment-CV-AdaptThres-Sample
+# Cytomine dummy app
 
-Segmentation of samples using Computer Vision (CV) Adaptive Thresholding.
+Base model for creating software/apps to be used by the Cytomine interface.
 
--------------
-
-* **Summary:** It applies a thresholding algorithm to a thumbnail of a whole image (downloaded
-from Cytomine-Core) and upload detected geometries to Cytomine-Core (in a userjob layer)
-
-* **Typical application:** Detect sample regions before applying other algorithms (e.g. segmentation)
-
-* **Based on:** Adaptive Thresholding
-
------------------------------------------------------------------------------
-
-Copyright 2010-2019 University of Liège, Belgium, https://uliege.cytomine.org
+Based on "[How to] Develop, deploy and share a new software" from  [Cytomine Uliege documentation](https://doc.uliege.cytomine.org/display/ALGODOC/%5BHOWTO%5D+Develop%2C+deploy+and+share+a+new+software)
