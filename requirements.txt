@@ -1,7 +1,7 @@
 CacheControl>=0.12.5
 git+git://github.com/Cytomine-ULiege/Cytomine-python-client.git
 numpy>=1.16.2
-opencv-python==4.0.0.21
+opencv-python==4.2.0.32
 opencv-python-headless==4.1.2.30
 Shapely>=1.7b1
 requests>=2.22.0
